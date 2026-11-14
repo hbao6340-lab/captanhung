@@ -1,0 +1,20 @@
+import { NextRequest } from "next/server";
+import { withHandler, json, logAudit } from "@/app/api/_lib/route-helper";
+import { requireAuth } from "@/lib/auth";
+import { getEventById, updateEvent, createAuditLog } from "@/db/repository";
+
+const handler = withHandler(
+  async (req: NextRequest, { params }: any) => {
+    const user = await requireAuth();
+    const { id } = await params;
+    const event = await getEventById(id);
+    if (!event) return json({ error: "Event not found" }, 404);
+
+    const updated = await updateEvent(id, { status: "OPEN", closed_at: null });
+    await createAuditLog({ actorUserId: user.id, action: "EVENT_REOPEN", entityType: "Event", entityId: id, newValues: { status: "OPEN" } });
+    return json({ event: updated });
+  },
+  { requireAuth: true }
+);
+
+export const POST = handler;
