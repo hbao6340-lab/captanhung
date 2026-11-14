@@ -13,7 +13,12 @@ const NAV: { label: string; href: string }[] = [
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+  let user: { full_name: string; email: string; role: string } | null = null;
+  try {
+    user = await getCurrentUser();
+  } catch {
+    user = null;
+  }
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
@@ -27,15 +32,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
                   <div className="font-medium text-gray-900">{user.full_name}</div>
                   <div className="text-xs text-gray-500">{user.role}</div>
                 </div>
-                <button
-                  onClick={async () => {
-                    await fetch("/api/auth/logout", { method: "POST" });
-                    window.location.href = "/admin-login";
-                  }}
-                  className="text-sm text-gray-600 hover:text-red-600 underline"
-                >
-                  Sign out
-                </button>
+                <form action="/api/auth/logout" method="POST">
+                  <button className="text-sm text-gray-600 hover:text-red-600 underline">Sign out</button>
+                </form>
               </div>
             ) : (
               <a href="/admin-login" className="text-sm text-gray-600 hover:text-indigo-600">Sign in</a>
