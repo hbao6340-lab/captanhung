@@ -1,7 +1,13 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 async function request(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  const res = await fetch(`${BASE_URL}${input.toString().startsWith("http") ? "" : "/"}${input}`, {
+  const path = input.toString();
+  // When BASE_URL is empty, use the path directly (relative to origin).
+  // When BASE_URL is set, join properly to avoid protocol-relative URLs like "//api/...".
+  const url = BASE_URL
+    ? BASE_URL.replace(/\/$/, "") + (path.startsWith("/") ? "" : "/") + path
+    : path;
+  const res = await fetch(url, {
     headers: { "content-type": "application/json", ...(init?.headers ?? {}) },
     ...init,
     cache: "no-store",
