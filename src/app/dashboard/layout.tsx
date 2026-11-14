@@ -9,6 +9,7 @@ const NAV: { label: string; href: string }[] = [
   { label: "Reports", href: "/dashboard/reports" },
   { label: "Administrators", href: "/dashboard/users" },
   { label: "Audit logs", href: "/dashboard/audit-logs" },
+  { label: "Settings", href: "/dashboard/settings" },
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -26,9 +27,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
                   <div className="font-medium text-gray-900">{user.full_name}</div>
                   <div className="text-xs text-gray-500">{user.role}</div>
                 </div>
-                <form action="/api/auth/logout" method="POST" className="flex items-center gap-2">
-                  <button className="text-sm text-gray-600 hover:text-red-600 underline">Sign out</button>
-                </form>
+                <button
+                  onClick={async () => {
+                    await fetch("/api/auth/logout", { method: "POST" });
+                    window.location.href = "/admin-login";
+                  }}
+                  className="text-sm text-gray-600 hover:text-red-600 underline"
+                >
+                  Sign out
+                </button>
               </div>
             ) : (
               <a href="/admin-login" className="text-sm text-gray-600 hover:text-indigo-600">Sign in</a>
