@@ -79,62 +79,62 @@ export default function CreateEventPage() {
       )}
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-4 max-w-xl">
         <div className="space-y-3">
-          <label className="text-sm font-medium text-gray-700">Event title *</label>
-          <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <label className="text-sm font-medium text-gray-900">Event title *</label>
+          <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
         </div>
         <div className="space-y-3">
-          <label className="text-sm font-medium text-gray-700">Description</label>
-          <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" rows={3} />
+          <label className="text-sm font-medium text-gray-900">Description</label>
+          <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" rows={3} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Venue name</label>
+            <label className="text-sm font-medium text-gray-900">Venue name</label>
             <input value={form.venue_name} onChange={e => setForm({...form, venue_name: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Venue address</label>
+            <label className="text-sm font-medium text-gray-900">Venue address</label>
             <input value={form.venue_address} onChange={e => setForm({...form, venue_address: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Latitude</label>
+            <label className="text-sm font-medium text-gray-900">Latitude</label>
             <input value={form.latitude} onChange={e => setForm({...form, latitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Longitude</label>
+            <label className="text-sm font-medium text-gray-900">Longitude</label>
             <input value={form.longitude} onChange={e => setForm({...form, longitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Geofence radius (m)</label>
+            <label className="text-sm font-medium text-gray-900">Geofence radius (m)</label>
             <input value={form.geofence_radius_meters} onChange={e => setForm({...form, geofence_radius_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Check-in starts at</label>
+            <label className="text-sm font-medium text-gray-900">Check-in starts at</label>
             <input type="datetime-local" required value={form.checkin_start_at} onChange={e => setForm({...form, checkin_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Check-in ends at</label>
+            <label className="text-sm font-medium text-gray-900">Check-in ends at</label>
             <input type="datetime-local" required value={form.checkin_end_at} onChange={e => setForm({...form, checkin_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Check-out starts at</label>
+            <label className="text-sm font-medium text-gray-900">Check-out starts at</label>
             <input type="datetime-local" value={form.checkout_start_at} onChange={e => setForm({...form, checkout_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Check-out ends at</label>
+            <label className="text-sm font-medium text-gray-900">Check-out ends at</label>
             <input type="datetime-local" value={form.checkout_end_at} onChange={e => setForm({...form, checkout_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">GPS accuracy threshold (m)</label>
+            <label className="text-sm font-medium text-gray-900">GPS accuracy threshold (m)</label>
             <input value={form.gps_accuracy_threshold_meters} onChange={e => setForm({...form, gps_accuracy_threshold_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Access type</label>
+            <label className="text-sm font-medium text-gray-900">Access type</label>
             <select value={form.access_type} onChange={e => setForm({...form, access_type: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2">
               <option>PUBLIC</option>
               <option>ACCESS_CODE</option>
@@ -142,7 +142,7 @@ export default function CreateEventPage() {
             </select>
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Access code (if access code)</label>
+            <label className="text-sm font-medium text-gray-900">Access code (if access code)</label>
             <input value={form.access_code} onChange={e => setForm({...form, access_code: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function CreateEventPage() {
             <label className="flex items-center gap-2"><input type="checkbox" checked={form.allow_multiple_attendance === "true"} onChange={e => setForm({...form, allow_multiple_attendance: e.target.checked ? "true" : "false"})} /> Allow multiple attendance</label>
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Max attendance</label>
+            <label className="text-sm font-medium text-gray-900">Max attendance</label>
             <input value={form.max_attendance} onChange={e => setForm({...form, max_attendance: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
           </div>
         </div>

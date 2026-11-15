@@ -2,9 +2,10 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { postJson } from "@/lib/api";
 import Link from "next/link";
+import QRCode from "qrcode";
 
 type EventRow = {
   id: string;
@@ -18,6 +19,66 @@ type EventRow = {
   venue_name: string | null;
   _count: { attendance_records: number };
 };
+
+function getEventUrl(eventCode: string): string {
+  if (typeof window !== "undefined" && window.location.origin) {
+    return `${window.location.origin.replace("vercel.app", "vercel.app")}/event/${eventCode}`;
+  }
+  return `https://captanhung.vercel.app/event/${eventCode}`;
+}
+
+type QrCodeCache = { [eventCode: string]: string };
+const qrCache: QrCodeCache = {};
+
+async function generateQrCode(eventCode: string): Promise<string> {
+  if (qrCache[eventCode]) return qrCache[eventCode];
+  const url = getEventUrl(eventCode);
+  try {
+    const dataUrl = await QRCode.toDataURL(url, {
+      width: 200,
+      margin: 2,
+      color: {
+        dark: "#111827",
+        light: "#ffffff",
+      },
+    });
+    qrCache[eventCode] = dataUrl;
+    return dataUrl;
+  } catch {
+    return "";
+  }
+}
+
+type QrCodeCellProps = { eventCode: string };
+function QrCodeCell({ eventCode }: QrCodeCellProps) {
+  const [qrData, setQrData] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    generateQrCode(eventCode).then((data) => {
+      setQrData(data);
+      setLoading(false);
+    });
+  }, [eventCode]);
+
+  if (loading) return <div className="h-12 w-12 animate-pulse rounded bg-gray-100 flex items-center justify-center text-xs text-gray-400">QR</div>;
+  if (!qrData) return <div className="h-12 w-12 flex items-center justify-center text-xs text-gray-400">–</div>;
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <img src={qrData} alt="QR code" className="h-10 w-10" />
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(getEventUrl(eventCode));
+        }}
+        className="text-[10px] text-indigo-600 hover:underline px-1"
+        title="Copy event link"
+      >
+        Copy link
+      </button>
+    </div>
+  );
+}
 
 export default function EventsPage() {
   const [events, setEvents] = useState<EventRow[]>([]);
@@ -82,6 +143,7 @@ export default function EventsPage() {
             <tr>
               <th className="px-4 py-3 text-left text-gray-500 font-medium">Event</th>
               <th className="px-4 py-3 text-left text-gray-500 font-medium">Code</th>
+              <th className="px-4 py-3 text-left text-gray-500 font-medium">QR Code</th>
               <th className="px-4 py-3 text-left text-gray-500 font-medium">Date / windows</th>
               <th className="px-4 py-3 text-left text-gray-500 font-medium">Venue</th>
               <th className="px-4 py-3 text-left text-gray-500 font-medium">Status</th>
@@ -97,6 +159,9 @@ export default function EventsPage() {
                     <Link href={`/dashboard/events/${e.id}`} className="font-medium text-gray-900 hover:text-indigo-600">{e.title}</Link>
                   </td>
                   <td className="px-4 py-3 text-gray-800 font-mono text-xs">{e.eventCode}</td>
+                  <td className="px-4 py-3">
+                    <QrCodeCell eventCode={e.eventCode} />
+                  </td>
                   <td className="px-4 py-3 text-gray-600">
                     <div>{new Date(e.checkin_start_at).toLocaleDateString()}</div>
                     <div className="text-xs text-gray-400 mt-1">In: {new Date(e.checkin_start_at).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}</div>
@@ -137,7 +202,7 @@ export default function EventsPage() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">No events yet. Create your first event.</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-500">No events yet. Create your first event.</td></tr>
             )}
           </tbody>
         </table>
