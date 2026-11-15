@@ -34,6 +34,15 @@ export default function CreateEventPage() {
     max_attendance: "",
   });
 
+  // datetime-local input returns "YYYY-MM-DDTHH:mm" — append timezone offset for ISO 8601
+  function toIsoWithOffset(local: string | undefined): string | undefined {
+    if (!local) return undefined;
+    const tzOffset = "+07:00"; // Asia/Ho_Chi_Minh
+    return local.endsWith("Z") || local.includes("+") || local.includes("-", 10)
+      ? local
+      : `${local}:00${tzOffset}`;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -49,8 +58,10 @@ export default function CreateEventPage() {
       require_geofence: form.require_geofence === "true",
       allow_multiple_attendance: form.allow_multiple_attendance === "true",
       max_attendance: form.max_attendance ? Number(form.max_attendance) : undefined,
-      checkout_start_at: form.checkout_start_at || undefined,
-      checkout_end_at: form.checkout_end_at || undefined,
+      checkin_start_at: toIsoWithOffset(form.checkin_start_at),
+      checkin_end_at: toIsoWithOffset(form.checkin_end_at),
+      checkout_start_at: toIsoWithOffset(form.checkout_start_at),
+      checkout_end_at: toIsoWithOffset(form.checkout_end_at),
     };
     try {
       const res = await postJson("/api/admin/events", payload);
@@ -89,49 +100,49 @@ export default function CreateEventPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Venue name</label>
-            <input value={form.venue_name} onChange={e => setForm({...form, venue_name: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.venue_name} onChange={e => setForm({...form, venue_name: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Venue address</label>
-            <input value={form.venue_address} onChange={e => setForm({...form, venue_address: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.venue_address} onChange={e => setForm({...form, venue_address: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Latitude</label>
-            <input value={form.latitude} onChange={e => setForm({...form, latitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.latitude} onChange={e => setForm({...form, latitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Longitude</label>
-            <input value={form.longitude} onChange={e => setForm({...form, longitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.longitude} onChange={e => setForm({...form, longitude: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Geofence radius (m)</label>
-            <input value={form.geofence_radius_meters} onChange={e => setForm({...form, geofence_radius_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.geofence_radius_meters} onChange={e => setForm({...form, geofence_radius_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Check-in starts at</label>
-            <input type="datetime-local" required value={form.checkin_start_at} onChange={e => setForm({...form, checkin_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input type="datetime-local" required value={form.checkin_start_at} onChange={e => setForm({...form, checkin_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Check-in ends at</label>
-            <input type="datetime-local" required value={form.checkin_end_at} onChange={e => setForm({...form, checkin_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input type="datetime-local" required value={form.checkin_end_at} onChange={e => setForm({...form, checkin_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Check-out starts at</label>
-            <input type="datetime-local" value={form.checkout_start_at} onChange={e => setForm({...form, checkout_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input type="datetime-local" value={form.checkout_start_at} onChange={e => setForm({...form, checkout_start_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Check-out ends at</label>
-            <input type="datetime-local" value={form.checkout_end_at} onChange={e => setForm({...form, checkout_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input type="datetime-local" value={form.checkout_end_at} onChange={e => setForm({...form, checkout_end_at: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">GPS accuracy threshold (m)</label>
-            <input value={form.gps_accuracy_threshold_meters} onChange={e => setForm({...form, gps_accuracy_threshold_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.gps_accuracy_threshold_meters} onChange={e => setForm({...form, gps_accuracy_threshold_meters: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Access type</label>
@@ -143,7 +154,7 @@ export default function CreateEventPage() {
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Access code (if access code)</label>
-            <input value={form.access_code} onChange={e => setForm({...form, access_code: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.access_code} onChange={e => setForm({...form, access_code: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -164,7 +175,7 @@ export default function CreateEventPage() {
           </div>
           <div className="space-y-3">
             <label className="text-sm font-medium text-gray-900">Max attendance</label>
-            <input value={form.max_attendance} onChange={e => setForm({...form, max_attendance: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2" />
+            <input value={form.max_attendance} onChange={e => setForm({...form, max_attendance: e.target.value})} className="rounded-md border border-gray-300 px-3 py-2 text-gray-900" />
           </div>
         </div>
         <button type="submit" disabled={loading} className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-white font-semibold hover:bg-indigo-700 disabled:opacity-60">
