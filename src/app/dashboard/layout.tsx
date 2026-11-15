@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
+import LogoutButton from "@/components/LogoutButton";
 
 const NAV: { label: string; href: string }[] = [
   { label: "Overview", href: "/dashboard" },
@@ -32,9 +33,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                   <div className="font-medium text-gray-900">{user.full_name}</div>
                   <div className="text-xs text-gray-500">{user.role}</div>
                 </div>
-                <form action="/api/auth/logout" method="POST">
-                  <button className="text-sm text-gray-600 hover:text-red-600 underline">Sign out</button>
-                </form>
+                <LogoutButton />
               </div>
             ) : (
               <a href="/admin-login" className="text-sm text-gray-600 hover:text-indigo-600">Sign in</a>
